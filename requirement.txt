@@ -1,0 +1,5 @@
+gradio
+google-generativeai
+pymongo[srv]
+python-dotenv
+dnspython
