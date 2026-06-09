@@ -186,5 +186,6 @@ with gr.Blocks(title="MatchDay AI") as app:
     clear_btn.click(clear_chat, outputs=[chatbot])
 
 app.launch(
-    theme=gr.themes.Base()
+    server_name="0.0.0.0",
+    server_port=7860
 )
