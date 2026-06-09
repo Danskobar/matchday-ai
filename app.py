@@ -1,4 +1,5 @@
-import google.generativeai as genai
+import gradio as gr
+from groq import Groq
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
@@ -7,8 +8,7 @@ import json
 load_dotenv()
 
 # Initialize clients
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-model = genai.GenerativeModel("gemini-2.0-flash")
+groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 mongo = MongoClient(os.getenv("MONGODB_URI"))
 db = mongo["matchday"]
 
@@ -105,8 +105,12 @@ RELEVANT TEAM DATA:
     full_prompt += f"Fan: {message}\nMatchDay AI:"
     
     try:
-        response = model.generate_content(full_prompt)
-        reply = response.text
+        response = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": full_prompt}],
+            max_tokens=1000
+        )
+        reply = response.choices[0].message.content
     except Exception as e:
         reply = f"Sorry, I ran into an error: {str(e)}"
     
